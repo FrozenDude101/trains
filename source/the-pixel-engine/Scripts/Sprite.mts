@@ -5,4 +5,6 @@ export default abstract class Sprite<TParent extends Component = Component> exte
 
     public abstract draw(ctx: CanvasRenderingContext2D): void;
 
+    public override getSprites = () => this;
+
 }

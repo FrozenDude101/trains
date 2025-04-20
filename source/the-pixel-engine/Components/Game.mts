@@ -51,6 +51,7 @@ export default class Game {
         this.ctx = ctx;
         this.ctx.imageSmoothingEnabled = false;
         this.ctx.translate(this.canvas.width/2, this.canvas.height/2);
+        this.ctx.scale(this.scale, this.scale);
     }
 
     public start(): void {
@@ -97,7 +98,7 @@ export default class Game {
     public render() {
         const sprites = this.handleEvent("getSprites");
 
-        this.ctx.clearRect(this.canvas.width/2, this.canvas.height/2, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(-this.canvas.width/2, -this.canvas.height/2, this.canvas.width, this.canvas.height);
         for (let sprite of sprites) {
             this.ctx.save();
             sprite.draw(this.ctx);
