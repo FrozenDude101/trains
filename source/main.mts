@@ -1,8 +1,8 @@
 import Game from "./the-pixel-engine/Components/Game.mjs";
 import Vector2 from "./the-pixel-engine/Maths/Vector2.mjs";
+import Stock from "./trains/stock/Stock.mjs";
 import Track from "./trains/track/Track.mjs";
 import TrackNode from "./trains/track/TrackNode.mjs";
-import TrackPosition from "./trains/track/TrackPosition.mjs";
 
 const game = new Game();
 
@@ -21,9 +21,9 @@ node3.addConnection(track2, track3);
 node4.addConnection(track3, track4);
 node1.addConnection(track4, track1);
 
-const trackPosition = game.addChild(new TrackPosition(track1, node1, 0));
+let stock = game.addChild(new Stock(track1, node1));
 
 //@ts-ignore
-window.position = trackPosition;
+window.stock = stock;
 
 game.start();

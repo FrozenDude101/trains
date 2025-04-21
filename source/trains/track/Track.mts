@@ -22,8 +22,6 @@ export default class Track extends Component {
         let totalDistance = this.node1.position.distanceTo(this.node2.position)
         let remainingDistance = totalDistance - startingAt;
 
-        console.log(from.name, startingAt, distance);
-
         if (distance >= remainingDistance) {
             return this.getOppositeNode(from).getConnectingTrack(this).travel(this.getOppositeNode(from), 0, distance - remainingDistance);
         }
