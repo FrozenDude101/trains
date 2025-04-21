@@ -36,7 +36,7 @@ export default abstract class Script<TParent extends Component = Component> impl
 
     public onEnable?: () => void = undefined;
     public onDisable?: () => void = undefined;
-    public onUpdate?: () => void = undefined;
+    public onUpdate?: (ms: number) => void = undefined;
     public getSprites?: () => Sprite = undefined;
 
     public hasEvent<TEvent extends ScriptEvent>(event: TEvent): boolean {
