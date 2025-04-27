@@ -33,7 +33,7 @@ export default class Stock extends Component {
 class StockUpdate extends Script<Stock> {
 
     public override onUpdate = (ms: number) => {
-        this.parent.travel(1);
+        this.parent.travel(ms/1000 * 25);
     }
 
 }
