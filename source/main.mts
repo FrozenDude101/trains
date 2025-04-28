@@ -1,29 +1,51 @@
 import Game from "./the-pixel-engine/Components/Game.mjs";
 import Vector2 from "./the-pixel-engine/Maths/Vector2.mjs";
-import Stock from "./trains/stock/Stock.mjs";
+import Stock, { StockUpdate } from "./trains/stock/Stock.mjs";
 import Track from "./trains/track/Track.mjs";
 import TrackNode from "./trains/track/TrackNode.mjs";
 
 const game = new Game();
 
-const node1 = game.addChild(new TrackNode("Node1", new Vector2(-50, 50)));
-const node2 = game.addChild(new TrackNode("Node2", new Vector2(-50, -50)));
-const node3 = game.addChild(new TrackNode("Node3", new Vector2(50, -50)));
-const node4 = game.addChild(new TrackNode("Node4", new Vector2(50, 50)));
+const nodeCount = 50;
+const circleRadius = 50;
+const stockCount = 5;
 
-const track1 = game.addChild(new Track("Track1", node1, node2));
-const track2 = game.addChild(new Track("Track2", node2, node3));
-const track3 = game.addChild(new Track("Track3", node3, node4));
-const track4 = game.addChild(new Track("Track4", node4, node1));
+const nodePoints: [number, number][] = [];
+for (let i = 0; i < nodeCount; i++) {
+    nodePoints.push([circleRadius * Math.sin(i * 2*Math.PI/nodeCount), circleRadius * Math.cos(i * 2*Math.PI/nodeCount)])
+}
 
-node2.addConnection(track1, track2);
-node3.addConnection(track2, track3);
-node4.addConnection(track3, track4);
-node1.addConnection(track4, track1);
+const nodes: TrackNode[] = [];
+for (let i = 0; i < nodePoints.length; i++) {
+    let point = nodePoints[i]!;
+    nodes.push(game.addChild(new TrackNode(`Node${i}`, new Vector2(point[0], point[1]))))
+}
 
-let stock = game.addChild(new Stock(track1, node1));
+const tracks: Track[] = [];
+let preTrack: Track | null = null;
+for (let i = 0; i < nodes.length - 1; i++) {
+    let node1 = nodes[i]!;
+    let node2 = nodes[i+1]!;
+    let track = game.addChild(new Track(`Track${i}-${i+1}`, node1, node2));
+    tracks.push(track);
+    if (preTrack !== null) {
+        node1.addConnection(preTrack, track);
+    }
+    preTrack = track;
+}
 
-//@ts-ignore
-window.stock = stock;
+let track = game.addChild(new Track(`TrackEnd`, nodes[0]!, nodes[nodes.length-1]!));
+nodes[0]!.addConnection(track, tracks[0]!);
+nodes[nodes.length-1]!.addConnection(track, tracks[tracks.length-1]!);
+
+let head = game.addChild(new Stock(tracks[0]!, nodes[0]!, 0));
+let pre = head;
+for (let i = 1; i < stockCount; i++) {
+    let item = game.addChild(new Stock(tracks[0]!, nodes[0]!, i * -25));
+    pre.setNext(item);
+    pre = item;
+}
+
+head.addScript(StockUpdate);
 
 game.start();

@@ -12,25 +12,34 @@ export default class Stock extends Component {
     public readonly bogey1: TrackPosition;
     public readonly bogey2: TrackPosition;
 
-    public constructor(track: Track, from: TrackNode) {
+    public nextStock: Stock | null = null;
+
+    public constructor(track: Track, from: TrackNode, t: number) {
         super();
-        this.bogey1 = this.addChild(new TrackPosition(track, from, this.length));
-        this.bogey2 = this.addChild(new TrackPosition(track, from, 0));
+        this.bogey1 = this.addChild(new TrackPosition(track, from, this.length + t));
+        this.bogey2 = this.addChild(new TrackPosition(track, from, t));
         this.addScript(StockSprite);
-        this.addScript(StockUpdate);
     }
 
-    public travel(distance: number) {
+    public setNext(stock: Stock) {
+        this.nextStock = stock;
+    }
+
+    public travel(distance: number): void {
         this.bogey1.travel(distance);
 
+        let nextDistance = 0;
         while (this.bogey1.getPosition().distanceTo(this.bogey2.getPosition()) > this.length) {
             this.bogey2.travel(0.1);
+            nextDistance += 0.1;
         }
+
+        this.nextStock?.travel(nextDistance);
     }
 
 }
 
-class StockUpdate extends Script<Stock> {
+export class StockUpdate extends Script<Stock> {
 
     public override onUpdate = (ms: number) => {
         this.parent.travel(ms/1000 * 25);
