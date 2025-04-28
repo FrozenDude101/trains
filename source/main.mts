@@ -6,9 +6,9 @@ import TrackNode from "./trains/track/TrackNode.mjs";
 
 const game = new Game();
 
-const nodeCount = 50;
-const circleRadius = 50;
-const stockCount = 5;
+const nodeCount = 10;
+const circleRadius = 80;
+const stockCount = 11;
 
 const nodePoints: [number, number][] = [];
 for (let i = 0; i < nodeCount; i++) {
